@@ -16,12 +16,13 @@ The following assumes that the two files provided by iMorph have not been rename
 
 ``` python
 >>> import os
->>> path = os.path.join('..',  'fixtures', 'iMorph-Sandstone')
+>>> path = os.path.join('fixtures', 'iMorph-Sandstone')
 >>> pn = op.Utilities.IO.iMorph.load(path=path)
 >>> pn.name = 'berea'
 
 ```
-Note that the \'..\' used in the path is to tell Python to move up 2 levels from the current directory (where the present script is stored).  This will change depending on the relative locations of your files so you'll have to learn how to construct the path for your system.
+
+> **Note**: The exact will change depending on the relative locations of your files so you'll have to learn how to construct the path for your system.
 
 ## Inspect Network
 
