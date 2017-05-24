@@ -1,4 +1,4 @@
-[![Travis](https://img.shields.io/travis/PMEAL/OpenPNM-Examples.svg)](https://travis-ci.org/PMEAL/OpenPNM-Examples)
+[![Travis](https://travis-ci.org/PMEAL/OpenPNM-Examples.svg?branch=master)](https://travis-ci.org/PMEAL/OpenPNM-Examples)
 
 # OpenPNM-Examples
 
