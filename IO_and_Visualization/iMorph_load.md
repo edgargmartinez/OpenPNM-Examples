@@ -1,6 +1,6 @@
 # iMorph Import Example
 
-(http://imorph.fr/)[iMorph] is a image analysis software that is available as a free download.  It happens to include a network extraction tool that is especially well suited to foams and other high porosity media.  The following example shows how to import a network from the files that are created by iMorph.
+[http://imorph.fr/](iMorph) is a image analysis software that is available as a free download.  It happens to include a network extraction tool that is especially well suited to foams and other high porosity media.  The following example shows how to import a network from the files that are created by iMorph.
 
 ## Open Spyder and import OpenPNM
 
