@@ -18,7 +18,6 @@ The following assumes that the two files provided by iMorph have not been rename
 >>> import os
 >>> path = os.path.join('fixtures', 'iMorph-Sandstone')
 >>> pn = op.Utilities.IO.iMorph.load(path=path)
->>> pn.name = 'berea'
 
 ```
 
