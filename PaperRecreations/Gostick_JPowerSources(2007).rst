@@ -6,8 +6,6 @@ Example: Regenerating Data from `J.T. Gostick et al. / JPS 173 (2007) 277–290`
 
 .. _J.T. Gostick et al. / JPS 173 (2007) 277–290: http://www.sciencedirect.com/science/article/pii/S0378775307009056
 
-    | **Warning:** The following example was painstakingly created using an early version OpenPNM, and does not work properly with the current version.  It is still valuable as it provides a detailed illustration of the OpenPNM workflow.
-
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Getting Started
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -344,9 +342,9 @@ References
     import matplotlib.pyplot as plt
 
     Lc = 40.5e-6
-
+    mgr = OpenPNM.Base.Workspace()
     #1 setting up network
-    sgl = OpenPNM.Network.Cubic([26, 26, 10], spacing=Lc, name='SGL10BA')
+    sgl = OpenPNM.Network.Cubic(shape=[26, 26, 10], spacing=Lc, name='SGL10BA')
     sgl.add_boundaries()
 
     #2 set up geometries
@@ -359,51 +357,46 @@ References
     boun = OpenPNM.Geometry.Boundary(network=sgl,pores=Ps,throats=Ts,name='boun')
 
     #constrict throats in the y and z directions
-    throats = sgl.throats('geo')
+    throats = geo.throats()
     connected_pores = sgl.find_connected_pores(throats)
     x1 = [sgl['pore.coords'][pair[0]][0] for pair in connected_pores]
     x2 = [sgl['pore.coords'][pair[1]][0] for pair in connected_pores]
     same_x = [x - y == 0 for x, y in zip(x1,x2)]
     factor = [s*.95 + (not s)*1 for s in same_x]
     throat_diameters = sgl['throat.diameter'][throats]*factor
+
     geo['throat.diameter']=throat_diameters
 
     #remove the regeneration ability of the diameter pore and throat properties
-    geo.remove_model('pore.diameter')
-    geo.remove_model('throat.diameter')
-    boun.remove_model('pore.diameter')
-    boun.remove_model('throat.diameter')
+    # geo.remove_model('pore.diameter')
+    # geo.remove_model('throat.diameter')
+    # boun.remove_model('pore.diameter')
+    # boun.remove_model('throat.diameter')
 
     #reset aspects relying on pore and throat sizes
-    geo.regenerate()
-    boun.regenerate()
+    geo.regenerate(props='throat.diameter', mode='exclude')
+    # boun.regenerate()
 
     #set up phases
     air = OpenPNM.Phases.Air(network = sgl, name = 'air')
     water = OpenPNM.Phases.Water(network = sgl, name = 'water')
 
-    #calculating all phase values
-    air.regenerate()
-    water.regenerate()
-
     #reset pore contact angle
     water['pore.contact_angle'] = 100
 
+    #calculating all phase values
+
+    # water.regenerate()
+    # air.regenerate()
+
     #1 create physics objects associated with our phases
+
     Ps = sgl.pores()
     Ts = sgl.throats()
     phys_water = OpenPNM.Physics.Standard(network=sgl,phase=water,pores=Ps,throats=Ts,dynamic_data=True,name='standard_water_physics')
     phys_air = OpenPNM.Physics.Standard(network=sgl,phase=air,pores=Ps,throats=Ts,dynamic_data=True,name='standard_air_physics')
 
-    #2 calculating physics properties (capillary pressure, hydraulic conductance, etc)
-    phys_water.regenerate()
-    phys_air.regenerate()
-
     inlets = sgl.pores('bottom_boundary')
-    used_inlets = [inlets[x] for x in range(0, len(inlets), 2)]
-
-    #using every other pore in the bottom and boundary as an inlet
-    #prevents extremely small diffusivity and permeability values in the z direction
     used_inlets = [inlets[x] for x in range(0, len(inlets), 2)]
 
     OP_1 = OpenPNM.Algorithms.OrdinaryPercolation(network=sgl,invading_phase=water,defending_phase=air)
@@ -418,7 +411,9 @@ References
     max_inv_seq = max(OP_1['throat.inv_seq'])
 
     num_seq = 20
+
     for x in range(num_seq+1):
+
         OP_1.return_results(sat = x/num_seq)
 
         #printing out so we know how far along we are
@@ -453,17 +448,19 @@ References
 
             #run Stokes Flow and find Permeability
             #single phase
-            Stokes_alg_single_phase_air = OpenPNM.Algorithms.StokesFlow(name='Stokes_alg_single_phase_air',network=sgl,phase=air)
-            Stokes_alg_single_phase_water = OpenPNM.Algorithms.StokesFlow(name='Stokes_alg_single_phase_water',network=sgl,phase=water)
 
-            Fickian_alg_single_phase_air = OpenPNM.Algorithms.FickianDiffusion(name='Fickian_alg_single_phase_air',network=sgl,phase=air)
-            Fickian_alg_single_phase_water = OpenPNM.Algorithms.FickianDiffusion(name='Fickian_alg_single_phase_water',network=sgl,phase=water)
 
-            Stokes_alg_multi_phase_air = OpenPNM.Algorithms.StokesFlow(name='Stokes_alg_multi_phase_air',network=sgl,phase=air)
-            Stokes_alg_multi_phase_water = OpenPNM.Algorithms.StokesFlow(name='Stokes_alg_multi_phase_water',network=sgl,phase=water)
+            Stokes_alg_single_phase_air = OpenPNM.Algorithms.StokesFlow(network=sgl,phase=air)
+            Stokes_alg_single_phase_water = OpenPNM.Algorithms.StokesFlow(network=sgl,phase=water)
 
-            Fickian_alg_multi_phase_air = OpenPNM.Algorithms.FickianDiffusion(name='Fickian_alg_multi_phase_air',network=sgl,phase=air)
-            Fickian_alg_multi_phase_water = OpenPNM.Algorithms.FickianDiffusion(name='Fickian_alg_multi_phase_water',network=sgl,phase=water)
+            Fickian_alg_single_phase_air = OpenPNM.Algorithms.FickianDiffusion(network=sgl,phase=air)
+            Fickian_alg_single_phase_water = OpenPNM.Algorithms.FickianDiffusion(network=sgl,phase=water)
+
+            Stokes_alg_multi_phase_air = OpenPNM.Algorithms.StokesFlow(network=sgl,phase=air)
+            Stokes_alg_multi_phase_water = OpenPNM.Algorithms.StokesFlow(network=sgl,phase=water)
+
+            Fickian_alg_multi_phase_air = OpenPNM.Algorithms.FickianDiffusion(network=sgl,phase=air)
+            Fickian_alg_multi_phase_water = OpenPNM.Algorithms.FickianDiffusion(network=sgl,phase=water)
 
             BC1_pores = sgl.pores(labels=bounds[bound_increment][0]+'_boundary')
             BC2_pores = sgl.pores(labels=bounds[bound_increment][1]+'_boundary')
@@ -522,6 +519,14 @@ References
             perm_water[str(bound_increment)].append(relative_eff_perm_water)
             diff_water[str(bound_increment)].append(relative_eff_diff_water)
 
+            mgr.purge_object(obj=Stokes_alg_single_phase_air)
+            mgr.purge_object(obj=Stokes_alg_single_phase_water)
+            mgr.purge_object(obj=Fickian_alg_single_phase_air)
+            mgr.purge_object(obj=Fickian_alg_single_phase_water)
+            mgr.purge_object(obj=Stokes_alg_multi_phase_air)
+            mgr.purge_object(obj=Stokes_alg_multi_phase_water)
+            mgr.purge_object(obj=Fickian_alg_multi_phase_air)
+            mgr.purge_object(obj=Fickian_alg_multi_phase_water)
 
 
     from matplotlib.font_manager import FontProperties
@@ -559,10 +564,10 @@ References
     #plots for subplot1 - strict permeability
     p1, = ax1.plot(sat, perm_water['0'], color = 'k', linestyle = '-', marker = 'o')
     p2, = ax1.plot(sat, perm_water['1'], color = z, linestyle = '-', marker = 'o')
-    p3, = ax1.plot(sat, perm_water['2'], color = 'w', linestyle = '-', marker = 'o')
+    p3, = ax1.plot(sat, perm_water['2'], color = 'b', linestyle = '-', marker = 'o')
     p4, = ax1.plot(sat, perm_air['0'], color = 'k', linestyle = '-', marker = '^')
     p5, = ax1.plot(sat, perm_air['1'], color = z, linestyle = '-', marker = '^')
-    p6, = ax1.plot(sat, perm_air['2'], color = 'w', linestyle = '-', marker = '^')
+    p6, = ax1.plot(sat, perm_air['2'], color = 'b', linestyle = '-', marker = '^')
     p10, = ax1.plot(x_values1, [x**(3) for x in x_values1], 'k--')
     ax1.plot(x_values1, [(1-x)**(3) for x in x_values1], 'k--')
     gs1, = ax1.plot(gostick_saturation_1, gostick_perm_air_case1, color = 'r', linestyle = '-', marker = 'D')
@@ -580,10 +585,10 @@ References
     #plots for subplot4 - diffusivity
     p11, = ax2.plot(sat, diff_water['0'], color = 'k', linestyle = '-', marker = 'o')
     p12, = ax2.plot(sat, diff_water['1'], color = z, linestyle = '-', marker = 'o')
-    p13, = ax2.plot(sat, diff_water['2'], color = 'w', linestyle = '-', marker = 'o')
+    p13, = ax2.plot(sat, diff_water['2'], color = 'b', linestyle = '-', marker = 'o')
     p14, = ax2.plot(sat, diff_air['0'], color = 'k', linestyle = '-', marker = '^')
     p15, = ax2.plot(sat, diff_air['1'], color = z, linestyle = '-', marker = '^')
-    p16, = ax2.plot(sat, diff_air['2'], color = 'w', linestyle = '-', marker = '^')
+    p16, = ax2.plot(sat, diff_air['2'], color = 'b', linestyle = '-', marker = '^')
     p20, = ax2.plot(x_values1, [x**(2) for x in x_values1], 'k--')
     ax2.plot(x_values1, [(1-x)**(2) for x in x_values1], 'k--')
     gs3, = ax2.plot(gostick_saturation_3, gostick_diff_air_case1, color = 'r', linestyle = '-', marker = 'D')
