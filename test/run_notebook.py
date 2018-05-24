@@ -31,7 +31,7 @@ def test_ipynb():
             if (name.endswith('.ipynb') and 'checkpoint' not in name):
                 nbook = os.path.join(path, name)
                 rc = _notebook_run(nbook)
-                print(nbook)
+                print(nbook, rc)
                 assert rc == 0
 
 if __name__ == '__main__':
