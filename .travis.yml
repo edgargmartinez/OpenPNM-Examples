@@ -3,8 +3,6 @@ sudo: false
 language: python
 
 python:
-  - "3.4"
-  - "3.5"
   - "3.6"
 
 before_install:
@@ -15,13 +13,13 @@ before_install:
   - export PATH="$HOME/miniconda/bin:$PATH"
 
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION --file requirements.txt
-  - pip install -r test_requirements.txt
-  - pip install openpnm
-  - chmod a+x run_tests
+  - conda env create -n test-environment python=$TRAVIS_PYTHON_VERSION -f environment.yml
+  - source activate test-environment
 
-script:
-  - python run_tests
+script: pytest --pep8 --cov=./
 
 notifications:
   email: false
+
+after_success:
+  - codecov
