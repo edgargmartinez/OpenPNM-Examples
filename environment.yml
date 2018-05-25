@@ -24,6 +24,6 @@ dependencies:
 - pip:
   - imageio
   - porespy
-  - https://github.com/PMEAL/OpenPNM/tree/dev-V2-alpha1 --install-option="--extra-index-url"
+  - git+https:https://github.com/PMEAL/OpenPNM/tree/dev-V2-alpha1.git
   - tqdm
   - gitpython
