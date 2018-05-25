@@ -23,7 +23,6 @@ dependencies:
 - pytest-pep8
 - pip:
   - imageio
-  - OpenPNM
   - porespy
   - tqdm
   - gitpython
