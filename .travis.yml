@@ -15,7 +15,6 @@ before_install:
 install:
   - conda env create -n test-environment python=$TRAVIS_PYTHON_VERSION -f environment.yml
   - source activate test-environment
-  - pip install --extra-index-url https://github.com/PMEAL/OpenPNM/tree/dev-V2-alpha1 openpnm
 
 script: pytest --pep8 --cov=./
 
