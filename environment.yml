@@ -25,6 +25,6 @@ dependencies:
   - sympy
   - imageio
   - porespy
-  - git+https://github.com/PMEAL/OpenPNM@#852
+  - git+https://github.com/PMEAL/OpenPNM@updating_percolaton
   - tqdm
   - gitpython
