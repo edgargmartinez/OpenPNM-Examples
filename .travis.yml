@@ -13,8 +13,8 @@ before_install:
   - export PATH="$HOME/miniconda/bin:$PATH"
 
 install:
-  - conda env create -n test-environment python=$TRAVIS_PYTHON_VERSION -f environment.yml
-  - source activate test-environment
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION --file requirements.txt
+  - pip install -r test_requirements.txt
   - "pip install -e git+https://github.com/PMEAL/OpenPNM@updating_percolaton#egg=openpnm"
 
 script: pytest --pep8 --cov=./

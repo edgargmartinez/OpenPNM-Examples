@@ -1,0 +1,11 @@
+- atlas
+- numpy
+- scipy
+- matplotlib
+- pandas
+- scikit-image
+- dill
+- pyyaml
+- jupyter
+- sympy
+- numba
