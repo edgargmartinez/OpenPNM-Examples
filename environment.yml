@@ -22,6 +22,7 @@ dependencies:
 - pytest-cov
 - pytest-pep8
 - pip:
+  - sympy
   - imageio
   - porespy
   - git+https://github.com/PMEAL/OpenPNM@#852
