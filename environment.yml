@@ -24,6 +24,6 @@ dependencies:
 - pip:
   - imageio
   - porespy
-  - git+https://github.com/PMEAL/OpenPNM/@dev-V2-alpha1
+  - git+https://github.com/PMEAL/OpenPNM/@updating_percolation
   - tqdm
   - gitpython
