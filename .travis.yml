@@ -15,7 +15,7 @@ before_install:
 install:
   - conda env create -n test-environment python=$TRAVIS_PYTHON_VERSION -f environment.yml
   - source activate test-environment
-  - "pip install -e git+https://github.com/PMEAL/OpenPNM@updating_percolaton#egg=openpnm --upgrade --no-deps"
+  - "pip install -e git+https://github.com/PMEAL/OpenPNM@updating_percolaton#egg=openpnm"
 
 script: pytest --pep8 --cov=./
 
