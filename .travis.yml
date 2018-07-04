@@ -15,7 +15,7 @@ before_install:
 install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION --file requirements.txt
   - pip install -r test_requirements.txt
-  - "pip install -e git+https://github.com/PMEAL/OpenPNM@updating_percolaton#egg=openpnm --no-cache --src $HOME/miniconda/lib/python3.6/site-packages"
+  - "pip install -e git+https://github.com/PMEAL/OpenPNM@dev-V2-alpha1#egg=openpnm --no-cache --src $HOME/miniconda/lib/python3.6/site-packages"
 
 script: pytest --pep8 --cov=./
 
