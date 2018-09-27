@@ -3,8 +3,6 @@ sudo: false
 language: python
 
 python:
-  - "3.4"
-  - "3.5"
   - "3.6"
 
 before_install:
@@ -17,11 +15,12 @@ before_install:
 install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION --file requirements.txt
   - pip install -r test_requirements.txt
-  - pip install openpnm
-  - chmod a+x run_tests
+  - "pip install -e git+https://github.com/PMEAL/OpenPNM@master#egg=openpnm --no-cache --src $HOME/miniconda/lib/python3.6/site-packages"
 
-script:
-  - python run_tests
+script: pytest --pep8 --cov=./
 
 notifications:
   email: false
+
+after_success:
+  - codecov

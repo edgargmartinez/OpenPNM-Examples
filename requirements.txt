@@ -6,3 +6,6 @@ pandas
 scikit-image
 dill
 pyyaml
+jupyter
+sympy
+numba
